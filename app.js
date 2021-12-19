@@ -15,8 +15,13 @@ const config = require('./config');
 const _data = require('./lib/data');
 
 // @TODO delete it after
-_data.create('test','test',{'name':'Abdurrahim'},(err)=>{
-  console.log('it was occured an error: ', err);
+
+_data.read('test','test',(err, data)=>{
+  console.log('it was occured an error: ', err, 'and data is : ', data);
+})
+
+_data.delete('test', 'test', (err)=>{
+  console.log(err);
 })
 
 
