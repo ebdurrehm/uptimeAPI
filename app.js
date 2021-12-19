@@ -12,17 +12,8 @@ const fs = require('fs');
 const url = require('url');
 const {StringDecoder} = require('string_decoder');
 const config = require('./config');
-const _data = require('./lib/data');
-
-// @TODO delete it after
-
-_data.read('test','test',(err, data)=>{
-  console.log('it was occured an error: ', err, 'and data is : ', data);
-})
-
-_data.delete('test', 'test', (err)=>{
-  console.log(err);
-})
+const handlers = require('./lib/handlers');
+const helper = require('./lib/helpers');
 
 
 
@@ -53,72 +44,55 @@ httpsServer.listen(config.httpsPort,()=>{
   console.log(`server is started on port ${config.httpsPort} in ${config.envName} mode`);
 })
 
-//define handler
-let handlers = {
-
-}
-
-//sample handler
-handlers.sample = (datas, callback)=>{
-  callback(406, {'name':'sample handler'})
-}
-
-//notfound handler
-handlers.notFound = (datas, callback)=>{
-  callback(404);
-}
 //define a request router
 let router = {
-  '/sample': handlers.sample
+  '/sample': handlers.sample,
+  '/users': handlers.users
 }
-
 //unified server function
 let unifiedServer = function(req,res){
   //get the url and parse it as a string object
 const urlString = url.parse(req.url,true)
 
 // get HTTP method
-const method = req.method;
+const method = req.method.toLowerCase();
 
 // get headers
 let headers = req.headers;
 // get a path
 let path =  urlString.pathname;
-
+console.log(path);
 //get query string
-const query = JSON.stringify(urlString.query);
-
- 
-//write requested path
+const query = helper.stringToObject(JSON.stringify(urlString.query));
 
 //get payload if it have
 const decoder = new StringDecoder('utf-8');
-let buffer = [];
+let buffer = '';
 
 //listen req object when data streams read data chunk and write it to array
 req.on('data', (data)=>{
-  buffer.push(decoder.write(data));
+  buffer +=decoder.write(data);
 })
 
 //when streams data reading and writing process end , write completed data to console
 req.on('end',()=>{
-  buffer.push(decoder.end());
-  for(var data of buffer){
-    console.log(data); }
+  buffer +=decoder.end();
+  
+    console.log(buffer); 
     //chose the handler
   let chooseHandler = typeof(router[path]) !== 'undefined'?router[path]:handlers.notFound;
   
   //construct the data object to send to the handler
-  let datas = {
+  let data = {
     'path': path,
     'method': method,
     'query':query,
     'headers': headers,
-    'payload': buffer
+    'payload': helper.stringToObject(buffer)
   }
 
   //route handlers
-  chooseHandler(datas, (statusCode, payload)=>{
+  chooseHandler(data, (statusCode, payload)=>{
     //use status code or define as default
     statusCode = typeof(statusCode) === 'number'? statusCode:200;
 
