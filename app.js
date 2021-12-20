@@ -47,7 +47,8 @@ httpsServer.listen(config.httpsPort,()=>{
 //define a request router
 let router = {
   '/sample': handlers.sample,
-  '/users': handlers.users
+  '/users': handlers.users,
+  '/tokens': handlers.tokens
 }
 //unified server function
 let unifiedServer = function(req,res){
