@@ -12,14 +12,16 @@ let environments = {};
 environments.dev = {
     'envName': 'dev',
     'httpPort': 8000,
-    'httpsPort': 8001
+    'httpsPort': 8001,
+    'maxCheck': 5
 }
 
 //create production environment
 environments.production = {
     'envName': 'production',
     'httpPort': 8080,
-    'httpsPort': 443
+    'httpsPort': 443,
+    'maxCheck': 5
 }
 
 //set default environment
