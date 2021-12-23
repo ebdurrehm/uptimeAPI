@@ -48,7 +48,8 @@ httpsServer.listen(config.httpsPort,()=>{
 let router = {
   '/sample': handlers.sample,
   '/users': handlers.users,
-  '/tokens': handlers.tokens
+  '/tokens': handlers.tokens,
+  '/checks': handlers.checks
 }
 //unified server function
 let unifiedServer = function(req,res){
@@ -60,6 +61,7 @@ const method = req.method.toLowerCase();
 
 // get headers
 let headers = req.headers;
+
 // get a path
 let path =  urlString.pathname;
 console.log(path);
