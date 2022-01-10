@@ -8,7 +8,12 @@
 
 //Dependencies
 const server = require('./lib/server');
+const lib = require('./lib/data');
+const services = require('./lib/service');
 
+lib.list('users', (err, data)=>{
+  console.log(`the error ${err}, the data: ${data}`);
+})
 
 //instantinate the app object
 const app = {};
@@ -17,6 +22,8 @@ const app = {};
 app.init = function(){
    //initilaize the server
    server.init();
+   //initilaize the background services
+  services.init();
 }
 
 //execute the app
