@@ -8,12 +8,8 @@
 
 //Dependencies
 const server = require('./lib/server');
-const lib = require('./lib/data');
 const services = require('./lib/service');
 
-lib.list('users', (err, data)=>{
-  console.log(`the error ${err}, the data: ${data}`);
-})
 
 //instantinate the app object
 const app = {};
